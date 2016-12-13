@@ -1,4 +1,4 @@
-package dev.example.common.maintenance;
+package dev.autumn.example.common.maintenance;
 
 
 public class OutputDescriptorV1 extends OutputDescriptor {

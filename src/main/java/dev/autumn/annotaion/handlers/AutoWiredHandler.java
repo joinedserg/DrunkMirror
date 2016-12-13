@@ -7,8 +7,8 @@ import dev.autumn.annotaion.AnnotationHandler;
 import dev.autumn.annotaion.Autowired;
 import dev.autumn.annotaion.MarkedAnnotationHandler;
 import dev.autumn.annotaion.OutputContext;
+import dev.autumn.example.common.maintenance.OutputDescriptor;
 import dev.autumn.parser.AutumnResultParsing;
-import dev.example.common.maintenance.OutputDescriptor;
 
 @MarkedAnnotationHandler
 public class AutoWiredHandler implements AnnotationHandler {

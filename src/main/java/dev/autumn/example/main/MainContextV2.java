@@ -1,9 +1,8 @@
-package dev.example.main;
+package dev.autumn.example.main;
 
 import dev.autumn.annotaion.*;
+import dev.autumn.example.common.maintenance.*;
 import dev.autumn.*;
-
-import dev.example.common.maintenance.*;
 
 
 @Component("mainContextV2")

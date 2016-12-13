@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<nodes info="Example_nodes">
+
+	<available_components av_package="dev.drunkmirror" />
+
+	<node id="DrunkMirror" class="dev.drunkmirror.DrunkMirror">
+		<var_context name="daodef" id_node="xmldao" />
+	
+	</node>
+	
+	<node id="xmldao" class="dev.drunkmirror.dao.impl.DaoImpl4Db">
+		
+	
+	</node>
+
+	<!--node id="mainContext" class="dev.example.main.MainContext">
+		<var_context name="OutputContext" id_node="outputContext" />
+		<property name="name" value="serg" />
+		<property name="height" value="188" />
+	</node>
+
+	<node id="outputContext" class="dev.example.common.maintenance.OutputDescriptorV1" /-->
+
+</nodes>

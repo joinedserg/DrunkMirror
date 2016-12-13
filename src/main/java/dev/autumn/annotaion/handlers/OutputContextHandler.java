@@ -4,8 +4,8 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 import dev.autumn.annotaion.*;
+import dev.autumn.example.common.maintenance.OutputDescriptor;
 import dev.autumn.parser.AutumnResultParsing;
-import dev.example.common.maintenance.OutputDescriptor;
 
 @MarkedAnnotationHandler
 public class OutputContextHandler implements AnnotationHandler {

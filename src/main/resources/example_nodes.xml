@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <nodes info="Example_nodes">
 
-	<available_components av_package="dev.example" />
+	<available_components av_package="dev.autumn" />
 
 	<node id="mainContext" class="dev.example.main.MainContext">
 		<var_context name="OutputContext" id_node="outputContext" />
