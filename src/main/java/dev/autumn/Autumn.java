@@ -39,14 +39,14 @@ public class Autumn {
 			for(String k : nodes.keySet()) {				
 				Class c = nodes.get(k);
 				
-				log.warn("key:" + k + "  name:" + c.getName());
+				//log.warn("key:" + k + "  name:" + c.getName());
 				xmlParser.addResult(k, c.getName());
 			}
 		}
 		for(AutumnResultParsing res : xmlParser.getResults()) {			
 			Class c = Class.forName(res.getAvailablePath());
 			
-			log.warn("key:" + res.getIdNode() + "  name:" + c.getName());
+			//log.warn("key:" + res.getIdNode() + "  name:" + c.getName());
 			nodes.put(res.getIdNode(), c);
 		}
 		
