@@ -235,30 +235,30 @@ public class DaoImpl4Xml extends Dao {
 	}
 
 
-	public static void main(String[] args) throws SQLException {
+	public static void main(String[] args) throws SQLException, NoSuchFieldException {
 		String log4jConfPath = "src/main/resources/log4j.properties";
 		PropertyConfigurator.configure(log4jConfPath);
 
 
 		DaoImpl4Xml dao = new DaoImpl4Xml();
 		DaoImpl4Db db = new DaoImpl4Db();
-		A a1 = new A("t_name1", new Date(), 1, "ignore_inf1");
-		A a2 = new A("t_name2", new Date(), 2, "ignore_inf2");
+		//A a1 = new A("t_name1", new Date(), 1, "ignore_inf1");
+		//A a2 = new A("t_name2", new Date(), 2, "ignore_inf2");
 
-
-		db.save(a1);
+		db.getfromDB();
+		//db.save(a1);
 		//dao.save(a1);/**/
 
 
 		List list = new ArrayList();
-		list.add(a1);
-		list.add(a2);
+		//list.add(a1);
+		//list.add(a2);
 
 		//dao.save(list);
 
 		Map<Integer, A> map = new HashMap();
-		map.put(1, a1);
-		map.put(2, a2);
+		//map.put(1, a1);
+		//map.put(2, a2);
 
 		//dao.save(map);
 

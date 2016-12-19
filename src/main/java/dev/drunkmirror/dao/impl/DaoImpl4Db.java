@@ -58,6 +58,9 @@ public class DaoImpl4Db extends Dao {
         return null;
     }
 
+    public void getfromDB() throws NoSuchFieldException {
+        getFromEntities();
+    }
 
     protected Object parse(String path) {
         // TODO Auto-generated method stub
@@ -73,8 +76,8 @@ public class DaoImpl4Db extends Dao {
             while (rs.next()) {
                 int id_entity = rs.getInt("ID_Entities");
                 String nameClass = rs.getString("nameClass");
-                Integer idParent = rs.getInt("idParent");
-                if (idParent == null) {
+                //Integer idParent = rs.getInt("idParent");
+                if (id_entity<3) {
                     Object o = loadClass(nameClass).newInstance();
                     getFromAttribute(id_entity, o);
                 }
