@@ -1,5 +1,6 @@
 package dev.drunkmirror.dao.impl;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 import org.apache.log4j.LogManager;
@@ -234,18 +235,19 @@ public class DaoImpl4Xml extends Dao {
 	}
 
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
 		String log4jConfPath = "src/main/resources/log4j.properties";
 		PropertyConfigurator.configure(log4jConfPath);
 
 
 		DaoImpl4Xml dao = new DaoImpl4Xml();
-
+		DaoImpl4Db db = new DaoImpl4Db();
 		A a1 = new A("t_name1", new Date(), 1, "ignore_inf1");
 		A a2 = new A("t_name2", new Date(), 2, "ignore_inf2");
 
 
-		dao.save(a1);/**/
+		db.save(a1);
+		//dao.save(a1);/**/
 
 
 		List list = new ArrayList();
