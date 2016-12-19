@@ -6,15 +6,7 @@ import org.apache.log4j.Logger;
 
 import dev.autumn.annotaion.Component;
 import dev.drunkmirror.dao.*;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Element;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.File;
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.List;
@@ -72,24 +64,38 @@ public class DaoImpl4Db extends Dao {
         return null;
     }
 
-    private void getFromEntities(String nameclass){
+    private void getFromEntities(){
         try {
             Connection dbConnection = getDBConnection();
             PreparedStatement statement = dbConnection.prepareStatement(
-                    "SELECT * FROM Entities WHERE nameClass=?");
-            statement.setString(1, nameclass);
+                    "SELECT * FROM Entities");
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                String id_attribute = rs.getString("ID_Attribute");
-                String nameAttr = rs.getString("nameAttr");
-
-
-                log.info("userid : " + id_attribute);
-                log.info("username : " + nameAttr);
+                int id_entity = rs.getInt("ID_Entities");
+                String nameClass = rs.getString("nameClass");
+                Integer idParent = rs.getInt("idParent");
+                if (idParent==null){
+                    loadClass(nameClass).newInstance();
+                }
+                log.info("entity_name : " + id_entity);
+                log.info("nameClass : " + nameClass);
             }
             dbConnection.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static Class<?> loadClass(String className) {
+        try {
+            return Class.forName(className);
+        }
+        catch (ClassNotFoundException e) {
+            throw new RuntimeException(className);
         }
     }
 
@@ -107,7 +113,7 @@ public class DaoImpl4Db extends Dao {
                 String value = rs.getString("value");
                 String type = rs.getString("type");
                 String id_entity = rs.getString("ID_Entities");
-
+                
                 log.info("userid : " + id_attribute);
                 log.info("username : " + nameAttr);
             }
