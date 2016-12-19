@@ -64,7 +64,7 @@ public class DaoImpl4Db extends Dao {
         return null;
     }
 
-    private void getFromEntities(){
+    private void getFromEntities() throws NoSuchFieldException {
         try {
             Connection dbConnection = getDBConnection();
             PreparedStatement statement = dbConnection.prepareStatement(
@@ -74,8 +74,9 @@ public class DaoImpl4Db extends Dao {
                 int id_entity = rs.getInt("ID_Entities");
                 String nameClass = rs.getString("nameClass");
                 Integer idParent = rs.getInt("idParent");
-                if (idParent==null){
-                    loadClass(nameClass).newInstance();
+                if (idParent == null) {
+                    Object o = loadClass(nameClass).newInstance();
+                    getFromAttribute(id_entity, o);
                 }
                 log.info("entity_name : " + id_entity);
                 log.info("nameClass : " + nameClass);
@@ -93,17 +94,16 @@ public class DaoImpl4Db extends Dao {
     private static Class<?> loadClass(String className) {
         try {
             return Class.forName(className);
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(className);
         }
     }
 
-    private void getFromAttribute(int id){
+    private void getFromAttribute(int id, Object o) throws SQLException, NoSuchFieldException, IllegalAccessException {
         try {
             Connection dbConnection = getDBConnection();
             PreparedStatement statement = dbConnection.prepareStatement(
-                    "SELECT * FROM Attribute where ID_Attribute=?");
+                    "SELECT * FROM Attribute where ID_Entities=?");
             statement.setInt(1, id);
 
             ResultSet rs = statement.executeQuery();
@@ -112,10 +112,10 @@ public class DaoImpl4Db extends Dao {
                 String nameAttr = rs.getString("nameAttr");
                 String value = rs.getString("value");
                 String type = rs.getString("type");
-                String id_entity = rs.getString("ID_Entities");
-                
-                log.info("userid : " + id_attribute);
-                log.info("username : " + nameAttr);
+                Class c = o.getClass();
+                Field field = o.getClass().getDeclaredField(nameAttr);
+                field.setAccessible(true);
+                field.set(o, value);
             }
             dbConnection.close();
         } catch (SQLException e) {
@@ -192,13 +192,12 @@ public class DaoImpl4Db extends Dao {
 
 
         if (isSuper == true) {
-            insertIntoEntities(idEnty, simpleName,1);
-            idForField=idEnty;
+            insertIntoEntities(idEnty, simpleName, 1);
+            idForField = idEnty;
             idEnty++;
-        }
-        else {
+        } else {
             insertIntoEntities(idEnty, simpleName);
-            idForField=idEnty;
+            idForField = idEnty;
             idEnty++;
         }
 
@@ -307,7 +306,7 @@ public class DaoImpl4Db extends Dao {
             dbConnection = getDBConnection();
             statement = dbConnection.createStatement();
 
-           try {
+            try {
                 statement.execute(createTable1SQL);
             } catch (SQLException e) {
                 log.info(e.getMessage());
