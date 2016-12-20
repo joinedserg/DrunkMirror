@@ -7,20 +7,20 @@ import org.apache.log4j.Logger;
 import dev.autumn.annotaion.Component;
 import dev.drunkmirror.dao.*;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class DaoImpl4Db extends Dao {
 
-    private String url = "jdbc:postgresql://localhost:5432/testDB";
-    private String usr = "postgres";
-    private String password = "root";
     private int idEnty, idAtr, idForField;
     int level;
+    private List<Object> list= new ArrayList<Object>();
 
     static Logger log = LogManager.getLogger(DaoImpl4Xml.class);
 
@@ -70,19 +70,28 @@ public class DaoImpl4Db extends Dao {
 
     private void getFromEntities() throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, ClassNotFoundException {
         try {
+            FileInputStream fis;
+            Properties property = new Properties();
             Connection dbConnection = getDBConnection();
             PreparedStatement statement = dbConnection.prepareStatement(
                     "SELECT * FROM Entities");
             ResultSet rs = statement.executeQuery();
+
+            fis = new FileInputStream("src/main/resources/config.properties");
+            property.load(fis);
+
+            String path = property.getProperty("example.path");
+
             while (rs.next()) {
                 int id_entity = rs.getInt("ID_Entities");
                 String nameClass = rs.getString("nameClass");
                 log.info(nameClass);
                 //Integer idParent = rs.getInt("idParent");
                 if (id_entity<3) {
-                    Class clazz = Class.forName(nameClass);
+                    Class clazz = Class.forName(path+nameClass);
                     Object o = clazz.getDeclaredConstructor().newInstance();
                     getFromAttribute(id_entity, o);
+                    list.add(o);
                 }
                 log.info("entity_name : " + id_entity);
                 log.info("nameClass : " + nameClass);
@@ -94,11 +103,15 @@ public class DaoImpl4Db extends Dao {
             e.printStackTrace();
         } catch (InstantiationException e) {
             e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
 
-    private void getFromAttribute(int id, Object o) throws SQLException, NoSuchFieldException, IllegalAccessException {
+    private void getFromAttribute(int id, Object o) throws SQLException, NoSuchFieldException, IllegalAccessException{
         try {
             Connection dbConnection = getDBConnection();
             PreparedStatement statement = dbConnection.prepareStatement(
@@ -111,9 +124,11 @@ public class DaoImpl4Db extends Dao {
                 String nameAttr = rs.getString("nameAttr");
                 String value = rs.getString("value");
                 String type = rs.getString("type");
+                log.info(value+" "+type);
                 Class c = o.getClass();
                 Field field = o.getClass().getDeclaredField(nameAttr);
                 field.setAccessible(true);
+                if((field.getType().getName()).equals("java.lang.String"))
                 field.set(o, value);
             }
             dbConnection.close();
@@ -255,16 +270,28 @@ public class DaoImpl4Db extends Dao {
 
     private Connection getDBConnection() {
         Connection dbConnection = null;
+        FileInputStream fis;
+        Properties property = new Properties();
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
             log.info(e.getMessage());
         }
         try {
-            dbConnection = DriverManager.getConnection(url, usr, password);
+            fis = new FileInputStream("src/main/resources/config.properties");
+            property.load(fis);
+
+            String host = property.getProperty("db.host");
+            String login = property.getProperty("db.login");
+            String password = property.getProperty("db.password");
+            dbConnection = DriverManager.getConnection(host, login, password);
             return dbConnection;
         } catch (SQLException e) {
             log.info(e.getMessage());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return dbConnection;
     }
