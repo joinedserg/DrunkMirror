@@ -8,6 +8,7 @@ import dev.autumn.annotaion.Component;
 import dev.drunkmirror.dao.*;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +59,7 @@ public class DaoImpl4Db extends Dao {
         return null;
     }
 
-    public void getfromDB() throws NoSuchFieldException {
+    public void getfromDB() throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, ClassNotFoundException {
         getFromEntities();
     }
 
@@ -67,7 +68,7 @@ public class DaoImpl4Db extends Dao {
         return null;
     }
 
-    private void getFromEntities() throws NoSuchFieldException {
+    private void getFromEntities() throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, ClassNotFoundException {
         try {
             Connection dbConnection = getDBConnection();
             PreparedStatement statement = dbConnection.prepareStatement(
@@ -76,9 +77,11 @@ public class DaoImpl4Db extends Dao {
             while (rs.next()) {
                 int id_entity = rs.getInt("ID_Entities");
                 String nameClass = rs.getString("nameClass");
+                log.info(nameClass);
                 //Integer idParent = rs.getInt("idParent");
                 if (id_entity<3) {
-                    Object o = loadClass(nameClass).newInstance();
+                    Class clazz = Class.forName(nameClass);
+                    Object o = clazz.getDeclaredConstructor().newInstance();
                     getFromAttribute(id_entity, o);
                 }
                 log.info("entity_name : " + id_entity);
@@ -94,13 +97,6 @@ public class DaoImpl4Db extends Dao {
         }
     }
 
-    private static Class<?> loadClass(String className) {
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(className);
-        }
-    }
 
     private void getFromAttribute(int id, Object o) throws SQLException, NoSuchFieldException, IllegalAccessException {
         try {

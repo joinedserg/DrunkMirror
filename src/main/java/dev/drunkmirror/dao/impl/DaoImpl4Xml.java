@@ -69,7 +69,7 @@ public class DaoImpl4Xml extends Dao {
 
 	private String getSpaces() {
 		String space = "    ";
-		String spaces = ""; 
+		String spaces = "";
 		for(int i = 0; i < level; i++) {
 			spaces += space;
 		}
@@ -111,14 +111,14 @@ public class DaoImpl4Xml extends Dao {
 		level++;
 		String nameType = c.getName();
 		String simpleName = c.getSimpleName();
-		
+
 		log.info(getSpaces() + "Type ins: " + nameType);
 		if(simpleName.equals("Object")) {
 			level--;
 			return;
 		}
 		ReflectedComponent a = (ReflectedComponent)c.getAnnotation(ReflectedComponent.class);
-		String reflectedName = simpleName; 
+		String reflectedName = simpleName;
 		if(a != null) {
 			level++;
 			log.info(getSpaces() + "valueAnn: " + reflectedName);
@@ -136,7 +136,7 @@ public class DaoImpl4Xml extends Dao {
 		Attr attrType = doc.createAttribute("type");
 		attrType.setTextContent(nameType);
 		curElem.setAttributeNode(attrType);
-		elDom.appendChild(curElem);	
+		elDom.appendChild(curElem);
 
 		if(isSuper == true) {
 			Attr id = doc.createAttribute("super");
@@ -170,37 +170,37 @@ public class DaoImpl4Xml extends Dao {
 					}
 					else if(embCol != null) {
 						log.info(getSpaces() + "Collection handler");
-						
+
 						Class researchedClass = f.get(obj).getClass();
 						if(Map.class.isAssignableFrom(researchedClass)) {
 							log.info(getSpaces() + "Field type: map");
 							log.info(getSpaces() + "Field concrete type: " + researchedClass);
-							
+
 							curElem = doc.createElement(f.getName());
 							Attr typeMap = doc.createAttribute("type");
 							typeMap.setTextContent(researchedClass.getName());
 							curElem.setAttributeNode(typeMap);
 							elDom.appendChild(curElem);
-							
+
 							Map map = (Map)f.get(obj);
-							for(Object key: map.keySet()) {								
+							for(Object key: map.keySet()) {
 								Element mapElem = doc.createElement("MapElem");
 								curElem.appendChild(mapElem);
 								research(key.getClass(), key, mapElem, false);
 
 								research(map.get(key).getClass(), map.get(key), mapElem, false);
-							}							
+							}
 						}
 						else if(List.class.isAssignableFrom(researchedClass)) {
 							log.info(getSpaces() + "Field type: list");
 							log.info(getSpaces() + "Field concrete type: " + researchedClass);
-							
+
 							curElem = doc.createElement(f.getName());
 							Attr typeList = doc.createAttribute("type");
 							typeList.setTextContent(researchedClass.getName());
 							curElem.setAttributeNode(typeList);
 							elDom.appendChild(curElem);
-							
+
 							List list = (List)f.get(obj);
 							for(Object el : list) {
 								research(el.getClass(), el, curElem, false);
@@ -221,7 +221,7 @@ public class DaoImpl4Xml extends Dao {
 						curElem.appendChild(field);
 					}
 				}
-				catch(Exception ex) {				
+				catch(Exception ex) {
 					ex.printStackTrace();
 				}
 				f.setAccessible(false);
@@ -235,18 +235,18 @@ public class DaoImpl4Xml extends Dao {
 	}
 
 
-	public static void main(String[] args) throws SQLException, NoSuchFieldException {
+	public static void main(String[] args) throws SQLException, NoSuchFieldException, NoSuchMethodException, InvocationTargetException, ClassNotFoundException {
 		String log4jConfPath = "src/main/resources/log4j.properties";
 		PropertyConfigurator.configure(log4jConfPath);
 
 
 		DaoImpl4Xml dao = new DaoImpl4Xml();
 		DaoImpl4Db db = new DaoImpl4Db();
-		//A a1 = new A("t_name1", new Date(), 1, "ignore_inf1");
-		//A a2 = new A("t_name2", new Date(), 2, "ignore_inf2");
+		A a1 = new A("t_name1", new Date(), 1, "ignore_inf1");
+		A a2 = new A("t_name2", new Date(), 2, "ignore_inf2");
 
-		db.getfromDB();
-		//db.save(a1);
+		//db.getfromDB();
+		db.save(a1);
 		//dao.save(a1);/**/
 
 
