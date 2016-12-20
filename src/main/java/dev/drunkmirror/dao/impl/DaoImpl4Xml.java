@@ -249,7 +249,6 @@ public class DaoImpl4Xml extends Dao {
 		//db.save(a1);
 		//dao.save(a1);/**/
 
-
 		List list = new ArrayList();
 		//list.add(a1);
 		//list.add(a2);

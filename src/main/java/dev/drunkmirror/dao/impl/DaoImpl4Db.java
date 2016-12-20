@@ -14,13 +14,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 @Component
 public class DaoImpl4Db extends Dao {
 
     private int idEnty, idAtr, idForField;
     int level;
-    private List<Object> list= new ArrayList<Object>();
+    private List<Object> list = new ArrayList<Object>();
 
     static Logger log = LogManager.getLogger(DaoImpl4Xml.class);
 
@@ -87,8 +88,8 @@ public class DaoImpl4Db extends Dao {
                 String nameClass = rs.getString("nameClass");
                 log.info(nameClass);
                 //Integer idParent = rs.getInt("idParent");
-                if (id_entity<3) {
-                    Class clazz = Class.forName(path+nameClass);
+                if (id_entity < 3) {
+                    Class clazz = Class.forName(path + nameClass);
                     Object o = clazz.getDeclaredConstructor().newInstance();
                     getFromAttribute(id_entity, o);
                     list.add(o);
@@ -111,7 +112,7 @@ public class DaoImpl4Db extends Dao {
     }
 
 
-    private void getFromAttribute(int id, Object o) throws SQLException, NoSuchFieldException, IllegalAccessException{
+    private void getFromAttribute(int id, Object o) throws SQLException, NoSuchFieldException, IllegalAccessException {
         try {
             Connection dbConnection = getDBConnection();
             PreparedStatement statement = dbConnection.prepareStatement(
@@ -124,12 +125,15 @@ public class DaoImpl4Db extends Dao {
                 String nameAttr = rs.getString("nameAttr");
                 String value = rs.getString("value");
                 String type = rs.getString("type");
-                log.info(value+" "+type);
+                log.info(value + " " + type);
                 Class c = o.getClass();
                 Field field = o.getClass().getDeclaredField(nameAttr);
                 field.setAccessible(true);
-                if((field.getType().getName()).equals("java.lang.String"))
-                field.set(o, value);
+                if ((field.getType().getName()).equals("java.lang.String")) {
+                    field.set(o, value);
+                } else if ((field.getType().getName()).equals("java.lang.Integer"))
+                    field.set(o, Integer.parseInt(value));
+
             }
             dbConnection.close();
         } catch (SQLException e) {
