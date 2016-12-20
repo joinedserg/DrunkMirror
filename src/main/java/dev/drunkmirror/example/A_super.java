@@ -7,9 +7,9 @@ public class A_super {
 
 	public A_super() {
 		this.A_supername_priv = "A_supername_priv";
-		this.A_supername_prot = "A_supername_prot";
+		this.A_supername_prot = "A_supername_pro1t";
 	}
 	
-	private String A_supername_priv;
+	protected String A_supername_priv;
 	protected String A_supername_prot;
 }

@@ -9,4 +9,13 @@ public class B {
 	}
 	
 	private String name;
+	
+	public String toString() {
+		String v = "";
+		
+		v += "B name: " + name;
+
+		return v;
+	}
+	
 }

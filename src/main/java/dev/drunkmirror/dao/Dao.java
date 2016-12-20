@@ -10,7 +10,7 @@ public abstract class Dao {
 	}
 	
 	abstract public void save(Object obj);
-	abstract public Object get();
+	abstract public Object get()  throws Exception;
 	
 	Object currentObject;
 	
