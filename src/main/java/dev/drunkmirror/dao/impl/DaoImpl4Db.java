@@ -126,14 +126,21 @@ public class DaoImpl4Db extends Dao {
                 String value = rs.getString("value");
                 String type = rs.getString("type");
                 log.info(value + " " + type);
-                Class c = o.getClass();
-                Field field = o.getClass().getDeclaredField(nameAttr);
-                field.setAccessible(true);
-                if ((field.getType().getName()).equals("java.lang.String")) {
+                try {
+                    Field field = o.getClass().getDeclaredField(nameAttr);
+                    field.setAccessible(true);
                     field.set(o, value);
-                } else if ((field.getType().getName()).equals("java.lang.Integer"))
-                    field.set(o, Integer.parseInt(value));
-
+                }
+                catch (IllegalAccessException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (NoSuchFieldException e){
+                    e.printStackTrace();
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
             }
             dbConnection.close();
         } catch (SQLException e) {
@@ -208,7 +215,6 @@ public class DaoImpl4Db extends Dao {
             return;
         }
 
-
         if (isSuper == true) {
             insertIntoEntities(idEnty, simpleName, 1);
             idForField = idEnty;
@@ -218,7 +224,6 @@ public class DaoImpl4Db extends Dao {
             idForField = idEnty;
             idEnty++;
         }
-
 
         Field[] fields = c.getDeclaredFields();
         for (Field f : fields) {
@@ -242,15 +247,15 @@ public class DaoImpl4Db extends Dao {
                     if (embType != null) {
                         research(f.get(obj).getClass(), f.get(obj), false);
                     } else if (embCol != null) {
-                        //log.info(getSpaces() + "Collection handler");
+                        log.info(getSpaces() + "Collection handler");
 
                         Class researchedClass = f.get(obj).getClass();
                         if (Map.class.isAssignableFrom(researchedClass)) {
-                            //log.info(getSpaces() + "Field type: map");
-                            //log.info(getSpaces() + "Field concrete type: " + researchedClass);
+                            log.info(getSpaces() + "Field type: map");
+                            log.info(getSpaces() + "Field concrete type: " + researchedClass);
                         } else if (List.class.isAssignableFrom(researchedClass)) {
-                            //log.info(getSpaces() + "Field type: list");
-                            //log.info(getSpaces() + "Field concrete type: " + researchedClass);
+                            log.info(getSpaces() + "Field type: list");
+                            log.info(getSpaces() + "Field concrete type: " + researchedClass);
                         }
                     } else {
                         log.info(getSpaces() + "Field value=" + f.get(obj));

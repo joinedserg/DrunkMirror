@@ -242,11 +242,11 @@ public class DaoImpl4Xml extends Dao {
 
 		DaoImpl4Xml dao = new DaoImpl4Xml();
 		DaoImpl4Db db = new DaoImpl4Db();
-		//A a1 = new A("t_name1", new Date(), 1, "ignore_inf1");
-		//A a2 = new A("t_name2", new Date(), 2, "ignore_inf2");
+		A a1 = new A("t_name1", new Date(), 1, "ignore_inf1");
+		A a2 = new A("t_name2", new Date(), 2, "ignore_inf2");
 
-		db.getfromDB();
-		//db.save(a1);
+		//db.getfromDB();
+		db.save(a1);
 		//dao.save(a1);/**/
 
 		List list = new ArrayList();
