@@ -9,8 +9,8 @@ public abstract class Dao {
 		//System.out.println("Dao");
 	}
 	
-	abstract public void save(Object obj);
-	abstract public Object get()  throws Exception;
+	abstract public void save(Object obj, String path) ;
+	//abstract public Object get()  throws Exception;
 	
 	Object currentObject;
 	
@@ -18,6 +18,6 @@ public abstract class Dao {
 	//or 
 	//or path to file with xml
 	//
-	abstract protected Object parse(String path);
+	abstract public Object parse(String path) throws Exception;
 	
 }

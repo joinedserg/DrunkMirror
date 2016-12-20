@@ -53,6 +53,8 @@ public class DaoImpl4Xml extends Dao {
 
 		level = 0;
 	}
+	
+	
 
 	private String getSpaces() {
 		String space = "    ";
@@ -65,7 +67,7 @@ public class DaoImpl4Xml extends Dao {
 	}
 
 	@Override
-	public void save(Object obj) {
+	public void save(Object obj, String path) {
 		log.info("\n\n\n");
 		log.info("DaoImpl4Xml save");
 
@@ -75,8 +77,6 @@ public class DaoImpl4Xml extends Dao {
 			Attr attrType = doc.createAttribute("type");
 			attrType.setTextContent(obj.getClass().getName());
 			main.setAttributeNode(attrType);
-
-
 			doc.appendChild(main);
 
 			Class c = obj.getClass();
@@ -85,7 +85,7 @@ public class DaoImpl4Xml extends Dao {
 			researchObj(c, obj, main, false);
 
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File("testXML.xml"));
+			StreamResult result = new StreamResult(new File(path));
 			Transformer transformer = TransformerFactory.newInstance().newTransformer();
 			transformer.transform(source, result);
 		}
@@ -93,8 +93,6 @@ public class DaoImpl4Xml extends Dao {
 			ex.printStackTrace();
 		}
 	}
-
-
 
 
 	private void researchObj(Class c, Object obj, Element elDom, boolean isSuper) /* throws  */{
@@ -226,16 +224,7 @@ public class DaoImpl4Xml extends Dao {
 
 
 	@Override
-	protected Object parse(String path) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public Object get() throws Exception {
-		String path = "testXML.xml";
-		
+	public Object parse(String path) throws Exception {		
 		File fXmlFile = new File(path);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -244,6 +233,9 @@ public class DaoImpl4Xml extends Dao {
 		level = 0;
 		return researchXml(doc.getDocumentElement(), new Object());
 	}
+
+
+
 
 
 	
@@ -318,7 +310,7 @@ public class DaoImpl4Xml extends Dao {
 		String log4jConfPath = "src/main/resources/log4j.properties";
 		PropertyConfigurator.configure(log4jConfPath);
 
-
+		String path = "testXML.xml";
 		DaoImpl4Xml dao = new DaoImpl4Xml();
 
 
@@ -326,26 +318,26 @@ public class DaoImpl4Xml extends Dao {
 		A a2 = new A("t_name2", 2, "ignore_inf2");
 
 
-		dao.save(a1);
+		dao.save(a1, path);
 
-		A obj = (A)dao.get();
+		A obj = (A)dao.parse(path);
 		System.out.println(obj);
 		
 		List list = new ArrayList();
 		list.add(a1);
 		list.add(a2);
-		dao.save(list);
+		dao.save(list, path);
 		
-		List listExample = (List)dao.get();
+		List listExample = (List)dao.parse(path);
 		System.out.println(listExample);
 		
 
 		Map<Integer, A> map = new HashMap();
 		map.put(1, a1);
 		map.put(2, a2);
-		dao.save(map);
+		dao.save(map, path);
 		
-		Map mapExample = (Map)dao.get();
+		Map mapExample = (Map)dao.parse(path);
 		System.out.println(mapExample);
 		
 		

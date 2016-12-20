@@ -18,20 +18,13 @@ public class DaoImpl4Db extends Dao {
 
 
 	@Override
-	public void save(Object obj) {
+	public void save(Object obj, String path) {
 		// TODO Auto-generated method stub
 		
 	}
 
-
 	@Override
-	public Object get() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	protected Object parse(String path) {
+	public Object parse(String path) {
 		// TODO Auto-generated method stub
 		return null;
 	}
